@@ -1,0 +1,22 @@
+export default players = [
+	{
+		id:0,
+		name:'FengLei',
+		img:'/aa',
+	},
+	{
+		id:1,
+		name:'Xiangzi',
+		img:'/aa',
+	},
+	{
+		id:2,
+		name:'HaoHao',
+		img:'/aa',
+	},
+	{
+		id:3,
+		name:'ZhouYuan',
+		img:'/aa',
+	}
+]
