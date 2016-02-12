@@ -6,6 +6,7 @@ import React,{
 
 import Button from './Button';
 import Players from './utils/Players';
+import Playing from './Playing';
 export default class ChoosePlayer extends React.Component {
 
     constructor(props) {

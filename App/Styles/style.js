@@ -8,10 +8,26 @@ var {
 } = React;
 
 var styles = StyleSheet.create({
+    item:{
+      flex:1,
+      height:40,
+      width:80,
+      borderColor:'#F500FF',
+      borderWidth:1,
+    },
+    row:{
+      flexDirection:'row'
+    },
+    header: {
+        paddingTop:30,
+        paddingBottom:10,
+        flexDirection:'row',  
+        flex:1
+    },
  
     container: {
       flex: 1,
-       backgroundColor: '#475577',
+      backgroundColor: '#475577',
     },
    
     transparent: {
