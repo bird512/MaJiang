@@ -10,13 +10,14 @@ var {
 var styles = StyleSheet.create({
     item:{
       flex:1,
-      height:40,
       width:80,
-      borderColor:'#F500FF',
+      height:20,
+      borderColor:'#000000',
       borderWidth:1,
     },
     row:{
-      flexDirection:'row'
+      flexDirection:'row',  
+      flex:1
     },
     header: {
         paddingTop:30,
@@ -24,6 +25,22 @@ var styles = StyleSheet.create({
         flexDirection:'row',  
         flex:1
     },
+    headitem:{
+      flex:1,
+      height:40,
+      width:80,
+      borderColor:'#F500FF',
+      borderWidth:1,
+    },
+    totalitem:{
+      marginTop: 12,
+      flex:1,
+      width:80,
+      height:20,
+      borderColor:'#FFFFFF',
+      borderWidth:1,
+    },
+    
  
     container: {
       flex: 1,
