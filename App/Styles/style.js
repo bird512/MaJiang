@@ -8,6 +8,20 @@ var {
 } = React;
 
 var styles = StyleSheet.create({
+    playerspanel:{
+      flexWrap:'wrap',
+      paddingTop:30,
+      paddingBottom:10,
+      flexDirection:'row',  
+      flex:1
+    },
+    playerselected:{
+      backgroundColor:'#3BC1FF',
+      borderColor:'#3BC1FF'
+    },
+    playerunselected:{
+      color: '#FFF'
+    },
     item:{
       flex:1,
       width:80,

@@ -134,7 +134,10 @@ export default class Playing extends Component{
       
     }
     onRevoke(){
-      this.state.record.pop();
+      let {record} = this.state;
+
+      record.pop();
+      this.setState(record);
     }
     checkEnd(isOldHost){
       if(isOldHost){
@@ -202,6 +205,9 @@ export default class Playing extends Component{
           {palyList}
           </ScrollView>
           {totalRow}
+          <TouchableOpacity onPress={this.onRevoke.bind(this)}>
+              <Text>刚才点错了</Text>
+          </TouchableOpacity>
         </View>
       )
     }
