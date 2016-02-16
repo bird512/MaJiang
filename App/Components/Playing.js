@@ -29,6 +29,8 @@ export default class Playing extends Component{
             isNoTaiFei:false
         }
     }
+    hostBackup=[];//for onRevoke
+    
     home(){
         console.log('go home');
     }
@@ -44,7 +46,10 @@ export default class Playing extends Component{
       Alert.alert('选庄',
                     null,
                     [
-                      {text: '选我庄', onPress: () => that.setState({currentHost:hostIndex})},
+                      {text: '选我庄', onPress: function(){
+                        that.setState({currentHost:hostIndex});
+                        that.hostBackup.push(hostIndex);
+                      }},
                       {text: '取消', onPress: () => {}},
                     ]
                   );      
@@ -119,7 +124,11 @@ export default class Playing extends Component{
       }else{
         chip.push(0);
       }
+      if(!isOldHost){
+        unpaidList = [];
+      }
       this.setState({currentHost:winerIndex});
+      this.hostBackup.push(winerIndex)
       let d = {
         host:this.state.currentHost,
         winner:winerIndex,
@@ -141,9 +150,15 @@ export default class Playing extends Component{
         null,
         [
           {text: '确定', onPress: function(){
-            let {record} = that.state;
+            let {record,unpaidList} = that.state;
             record.pop();
-            that.setState(record);
+            unpaidList.pop();
+            //that.setState(record);
+            that.hostBackup.pop();
+            let lastHost = that.hostBackup[that.hostBackup.length-1];
+            //if(!lastHost)lastHost = 4;
+            //console.log('lastHost= ',lastHost);
+            that.setState({record,unpaidList,currentHost:lastHost});
           }},
           {text: '取消', onPress: () => {}},
         ]
@@ -205,7 +220,7 @@ export default class Playing extends Component{
                   <Text>{item.name+(that.state.currentHost == index? "(庄)":"")}</Text>
                 </TouchableHighlight>)
     	})
-      header.push(<TouchableHighlight style={styles.headitem} onPress={this.onTaiPress.bind(this)} ><Text>台费{this.state.isNoTaiFei?"(免)":""}</Text></TouchableHighlight>);
+      header.push(<TouchableHighlight key='taiFei' style={styles.headitem} onPress={this.onTaiPress.bind(this)} ><Text>台费{this.state.isNoTaiFei?"(免)":""}</Text></TouchableHighlight>);
       //console.log('this.state.record = ',this.state.record);
 
       let totalNums = [0,0,0,0,0];
@@ -213,20 +228,20 @@ export default class Playing extends Component{
         let row = item.chip.map(function(subItem,subIndex){
           totalNums[subIndex]+=subItem;
           return (
-            <View style={styles.item} >
+            <View style={styles.item} key={subIndex+'_num_'+subIndex}>
                   <Text >{subItem}</Text>
                 </View>
             )
         })
-        return (<View style={styles.row} >
+        return (<View style={styles.row} key={'record_row_'+index}>
                   {row}
                 </View>)
       });
       let totalItems = totalNums.map(function(t,totalIndex){
           return (
-            <View style={styles.totalitem} >
+            <View style={styles.totalitem}  key={'total_'+totalIndex}>
                   <Text >{t}</Text>
-                </View>
+            </View>
             )
       })
       let totalRow = (<View style={styles.row} >
@@ -234,14 +249,15 @@ export default class Playing extends Component{
                   </View>
       );
       return (
-        <View>
+        <View >
           <View style={styles.header}>
             {header}
           </View>
-          <ScrollView>
-          {palyList}
+          <ScrollView >
+            {palyList}
+
           </ScrollView>
-          {totalRow}
+            {totalRow}
 
           <View style={styles.row} >
             <Button text='回撤' onPress={this.onRevoke.bind(this)}/>

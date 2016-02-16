@@ -107,27 +107,27 @@ export default class ChoosePlayer extends React.Component {
         });
         let totalHeader = Object.keys(totalMap).map(function(item,index){
             return(
-                    <View style={styles.totalitem} >
+                    <View style={styles.totalitem} key={'totalHeader_'+index}>
                       <Text >{item}</Text>
                     </View>
                 )
         });
        let totalValues = Object.keys(totalMap).map(function(item,index){
             return(
-                    <View style={styles.totalitem} >
+                    <View style={styles.totalitem} key={'totalValues_'+index}>
                       <Text >{totalMap[item]}</Text>
                     </View>
                 )
         });
-        let recordValues = this.state.records.map(function(record){
-            let recordRow =  Object.keys(totalMap).map(function(key,index){
+        let recordValues = this.state.records.map(function(record,index){
+            let recordRow =  Object.keys(totalMap).map(function(key,subIndex){
                 return(
-                        <View style={styles.totalitem} >
+                        <View style={styles.totalitem} key={index+'_totalItem_'+subIndex}>
                           <Text >{record[key]}</Text>
                         </View>
                     )
             });
-            return (<View style={styles.row} >{recordRow}</View>);
+            return (<View style={styles.row} key={'totalRow_'+index}>{recordRow}</View>);
         })      
         let items = this.state.players.map(function(item){
             let selectedStyle = item.selected? styles.playerselected:styles.palyerunselected;

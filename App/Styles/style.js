@@ -72,7 +72,9 @@ var styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#475577',
     },
-   
+    flex: {
+      flex: 1,
+    },   
     transparent: {
         marginTop: 70,
         padding: 15,

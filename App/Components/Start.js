@@ -53,7 +53,6 @@ export default class Start extends Component{
                 component: AddPlayer,
                 params: {
                     id: this.state.id,
-                    //从ChoosePlayer获取user
                     getUser: function(user) {
                         _this.setState({
                             user: user
