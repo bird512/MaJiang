@@ -14,6 +14,7 @@ export default class ChoosePlayer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            records:[],
             players:[],
             id: null
         }
@@ -27,7 +28,7 @@ export default class ChoosePlayer extends React.Component {
         this.setState({players:Players})
     }
 
-    _pressButton() {
+    _back() {
         const { navigator } = this.props;
             
         if(navigator) {
@@ -40,7 +41,7 @@ export default class ChoosePlayer extends React.Component {
             Alert.alert('Must select 4 Players');
             return;
         }
-        var _this = this;
+        var that = this;
         const { navigator } = this.props;
         if(navigator) {
             navigator.push({
@@ -48,7 +49,19 @@ export default class ChoosePlayer extends React.Component {
                 component: Playing,
                 params: {
                     id: this.state.id,
-                    players: selectedPlayers
+                    players: selectedPlayers,
+                    checkout: function(record) {
+                        let {players} = that.state;
+                        let selectedPlayers = players.filter((n) => n.selected == true);
+                        selectedPlayers.map(function(palyer,index){
+                            let name = palyer.name;
+
+                        })
+                        let {records} = that.state;
+                        records.push(record);
+                        that.setState(records);
+                        console.log('records = ',records);
+                    }
                 }
             });
         }
@@ -73,6 +86,49 @@ export default class ChoosePlayer extends React.Component {
     }
     render() {
         let that = this;
+        let totalMap = {};
+        this.state.records.map(function(item,index){
+            Object.keys(item).map(function(key){
+                let tempTotal = item[key];
+                if(totalMap[key]){
+                    tempTotal += totalMap[key];
+                }    
+              totalMap[key]=tempTotal;            
+            })
+            /*
+            for (let key of item.keys()) {
+                let tempTotal = item.get(key);
+                if(totalMap.has(key)){
+                    tempTotal += total.get(key);
+                }    
+              totalMap.set(key,tempTotal)
+            }
+            */
+        });
+        let totalHeader = Object.keys(totalMap).map(function(item,index){
+            return(
+                    <View style={styles.totalitem} >
+                      <Text >{item}</Text>
+                    </View>
+                )
+        });
+       let totalValues = Object.keys(totalMap).map(function(item,index){
+            return(
+                    <View style={styles.totalitem} >
+                      <Text >{totalMap[item]}</Text>
+                    </View>
+                )
+        });
+        let recordValues = this.state.records.map(function(record){
+            let recordRow =  Object.keys(totalMap).map(function(key,index){
+                return(
+                        <View style={styles.totalitem} >
+                          <Text >{record[key]}</Text>
+                        </View>
+                    )
+            });
+            return (<View style={styles.row} >{recordRow}</View>);
+        })      
         let items = this.state.players.map(function(item){
             let selectedStyle = item.selected? styles.playerselected:styles.palyerunselected;
             return(<TouchableOpacity key={item.name} onPress={that._select.bind(that, item)}>
@@ -82,15 +138,19 @@ export default class ChoosePlayer extends React.Component {
             </TouchableOpacity>);
                         
         }); 
+
         return(
             <View>
                 <View style={styles.playerspanel}>
                 {items}
                 </View>
-                <Button text='Start' onPress={this.startGame.bind(this)}/>
-                <TouchableOpacity onPress={this._pressButton.bind(this)}>
-                    <Text>点我跳回去</Text>
-                </TouchableOpacity>
+                <View style={styles.row} >{totalHeader}</View>
+                {recordValues}
+                <View style={styles.row} >
+                    <Button text='开始' onPress={this.startGame.bind(this)}/>
+                    <Button onPress={this._back.bind(this)} text='返回'/>
+                </View>
+                <View style={styles.row} >{totalValues}</View>
             </View>
         );
     }

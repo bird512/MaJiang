@@ -8,6 +8,7 @@ import React, {
   Navigator,TouchableOpacity
 } from 'react-native';
 import ChoosePlayer from './ChoosePlayer';
+import AddPlayer from './AddPlayer';
 import styles from '../Styles/style';
 import Button from './Button';
 
@@ -43,12 +44,31 @@ export default class Start extends Component{
             });
         }
     }
+    newPlayer(){
+        var _this = this;
+        const { navigator } = this.props;
+        if(navigator) {
+            navigator.push({
+                name: 'AddPlayer',
+                component: AddPlayer,
+                params: {
+                    id: this.state.id,
+                    //从ChoosePlayer获取user
+                    getUser: function(user) {
+                        _this.setState({
+                            user: user
+                        })
+                    }
+                }
+            });
+        }
+    }
     render(){
          return(
             <View style={[styles.bg,styles.transparent]}>
                 <Button onPress={this.newGame.bind(this)} text="New Game" />
-                <Button onPress={this.newGame.bind(this)} text="History" />
-                <Button onPress={this.newGame.bind(this)} text="Add User" />
+                <Button onPress={this.newPlayer.bind(this)} text="History" />
+                <Button onPress={this.newPlayer.bind(this)} text="Add User" />
             </View>
         );   	
 

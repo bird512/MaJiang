@@ -54,8 +54,20 @@ var styles = StyleSheet.create({
       borderColor:'#FFFFFF',
       borderWidth:1,
     },
-    
- 
+    label:{
+      width:50,
+      marginLeft:10,
+    },
+    input:{
+      borderWidth: 1,
+      height:35,
+      flex:1,
+      marginRight:20,
+      borderColor:'#ddd',
+      borderRadius: 4,
+      paddingLeft:5,
+      fontSize:14,
+    },
     container: {
       flex: 1,
       backgroundColor: '#475577',

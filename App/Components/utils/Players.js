@@ -1,40 +1,46 @@
 export default players = [
 	{
 		id:0,
-		name:'FengLei',
+		name:'磊子',
 		img:'/aa',
 		selected:false,
 	},
 	{
 		id:1,
-		name:'Xiangzi',
+		name:'翔子',
 		img:'/aa',
 		selected:false,
 
 	},
 	{
 		id:2,
-		name:'HaoHao',
+		name:'林浩',
 		img:'/aa',
 		selected:false,
 
 	},
 	{
 		id:3,
-		name:'ZhouYuan',
+		name:'周远',
 		img:'/aa',
 		selected:false,
 
 	},
 	{
 		id:4,
-		name:'LaoBan',
+		name:'老板',
 		img:'/aa',
 		selected:false,		
 	},
 	{
 		id:5,
-		name:'AGong',
+		name:'鸟龚',
+		img:'/aa',
+		selected:false,
+	},
+	{
+		id:6,
+		name:'亮亮',
 		img:'/aa',
 		selected:false,
 	}

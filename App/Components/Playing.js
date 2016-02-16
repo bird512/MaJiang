@@ -45,6 +45,7 @@ export default class Playing extends Component{
                     null,
                     [
                       {text: '选我庄', onPress: () => that.setState({currentHost:hostIndex})},
+                      {text: '取消', onPress: () => {}},
                     ]
                   );      
     }
@@ -57,11 +58,12 @@ export default class Playing extends Component{
                       {text: '爆头，杠开，七对', onPress: () => that.onRound(winerIndex,2)},
                       {text: '飘，杠爆，七爆', onPress: () => that.onRound(winerIndex,4)},
                       {text: '双飘，飘杠爆，飘七爆', onPress: () => that.onRound(winerIndex,8)},
+                      {text: '太大了说不出', onPress: () => that.onRound(winerIndex,16)},
+                      {text: '取消', onPress: () => {}},
                     ]
                   );
     }
     onTaiPress(){
-      console.log('-------onTaiPress');
       let that = this;
       Alert.alert('台费',
                 null,
@@ -134,12 +136,22 @@ export default class Playing extends Component{
       
     }
     onRevoke(){
-      let {record} = this.state;
-
-      record.pop();
-      this.setState(record);
+      let that = this;
+      Alert.alert('回撤',
+        null,
+        [
+          {text: '确定', onPress: function(){
+            let {record} = that.state;
+            record.pop();
+            that.setState(record);
+          }},
+          {text: '取消', onPress: () => {}},
+        ]
+        );
+      
     }
     checkEnd(isOldHost){
+      let that = this;
       if(isOldHost){
         return;
       }
@@ -151,16 +163,41 @@ export default class Playing extends Component{
       });
       let isLost = totalNums.find(function(item, index){
         if(item < LOSEMAX){
-          Alert.alert('Player'+index + ' lost');
+          let lostName = that.props.players[index].name;
+ 
+          //let result = new Map();
+          let result = {};
+          that.props.players.map(function(player,pindex){
+            result[player.name] = totalNums[pindex];
+            //result.set(player.name,totalNums[pindex]);
+          })
+          result['台费'] = totalNums[4];
+          that.props.checkout(result);
+          Alert.alert(lostName + '爆了',
+                      null,
+                      [
+                        {text: '继续', onPress: function(){
+                          that.setState({
+                              unpaidList:[],
+                              record: [],
+                              currentHost:4,
+                          });
+                        }},
+                        {text: '换人/结束', onPress: () => that._back()},
+                      ]);
+
           return true;
         }else{
           return false;
         }
       });
-
-    
     }
-
+    _back(){
+      const { navigator } = this.props;
+      if(navigator) {
+          navigator.pop();
+      }
+    }
     render(){
       let that = this;
     	let header = this.props.players.map(function(item,index){
@@ -176,18 +213,18 @@ export default class Playing extends Component{
         let row = item.chip.map(function(subItem,subIndex){
           totalNums[subIndex]+=subItem;
           return (
-            <View style={styles.item} key={subItem+subIndex}>
+            <View style={styles.item} >
                   <Text >{subItem}</Text>
                 </View>
             )
         })
-        return (<View style={styles.row} key={row+index}>
+        return (<View style={styles.row} >
                   {row}
                 </View>)
       });
       let totalItems = totalNums.map(function(t,totalIndex){
           return (
-            <View style={styles.totalitem} key={t+totalIndex}>
+            <View style={styles.totalitem} >
                   <Text >{t}</Text>
                 </View>
             )
@@ -205,9 +242,11 @@ export default class Playing extends Component{
           {palyList}
           </ScrollView>
           {totalRow}
-          <TouchableOpacity onPress={this.onRevoke.bind(this)}>
-              <Text>刚才点错了</Text>
-          </TouchableOpacity>
+
+          <View style={styles.row} >
+            <Button text='回撤' onPress={this.onRevoke.bind(this)}/>
+            <Button onPress={this._back.bind(this)} text='返回'/>
+          </View>
         </View>
       )
     }
