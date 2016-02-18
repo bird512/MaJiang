@@ -3,7 +3,7 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  View,
+  View,Picker,
   Navigator,TouchableOpacity,TouchableHighlight,Alert,ScrollView
 } from 'react-native';
 
@@ -103,7 +103,6 @@ export default class Playing extends Component{
         chip.push(num);
       };
       unpaidList.push(chip);
-      console.log('chip1 = ',chip);
       if(!isOldHost && !isNoTaiFei){//算台费
         //chip = [];
         let sums = [0,0,0,0];
@@ -115,9 +114,11 @@ export default class Playing extends Component{
           sums[3]+=item[3];
         });
         sums.map(function(sum,index){
-          if(sum>BASE){
-            taiFei+= Math.floor(sum/8);
-            chip[index] = chip[index] - taiFei;//扣台费
+          if(sum>=BASE){
+            let thisTaiFei = Math.floor(sum/BASE);
+            console.log('thisTaiFei = ',thisTaiFei);
+            taiFei+= thisTaiFei;
+            chip[index] = chip[index] - thisTaiFei;//扣台费
           }
         })
         chip.push(taiFei);
@@ -127,7 +128,6 @@ export default class Playing extends Component{
       if(!isOldHost){
         unpaidList = [];
       }
-      this.setState({currentHost:winerIndex});
       this.hostBackup.push(winerIndex)
       let d = {
         host:this.state.currentHost,
@@ -138,9 +138,7 @@ export default class Playing extends Component{
       };
       let {record} = this.state;
       record.push(d);
-      this.setState(record);
-      this.setState(unpaidList);
-      //this.state.record.push(d);
+      this.setState({record,unpaidList,currentHost:winerIndex});
       this.checkEnd(isOldHost);
       
     }
@@ -171,7 +169,7 @@ export default class Playing extends Component{
         return;
       }
       let totalNums = [0,0,0,0,0];
-      let palyList = this.state.record.map(function(item,index){
+      this.state.record.map(function(item,index){
         let row = item.chip.map(function(subItem,subIndex){
           totalNums[subIndex]+=subItem;
         })
@@ -206,6 +204,34 @@ export default class Playing extends Component{
           return false;
         }
       });
+    }
+    terminat(){
+      let that = this;
+      let totalNums = [0,0,0,0,0];
+      let palyList = this.state.record.map(function(item,index){
+        let row = item.chip.map(function(subItem,subIndex){
+          totalNums[subIndex]+=subItem;
+        })
+      });      
+      let result = {};
+      that.props.players.map(function(player,pindex){
+        result[player.name] = totalNums[pindex];
+        //result.set(player.name,totalNums[pindex]);
+      })
+      result['台费'] = totalNums[4];
+      that.props.checkout(result);
+      Alert.alert('中止',
+                  null,
+                  [
+                    {text: '继续', onPress: function(){
+                      that.setState({
+                          unpaidList:[],
+                          record: [],
+                          currentHost:4,
+                      });
+                    }},
+                    {text: '换人/结束', onPress: () => that._back()},
+                  ]);
     }
     _back(){
       const { navigator } = this.props;
@@ -260,6 +286,7 @@ export default class Playing extends Component{
             {totalRow}
 
           <View style={styles.row} >
+            <Button text='中止' onPress={this.terminat.bind(this)}/>
             <Button text='回撤' onPress={this.onRevoke.bind(this)}/>
             <Button onPress={this._back.bind(this)} text='返回'/>
           </View>
