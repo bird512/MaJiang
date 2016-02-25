@@ -43,5 +43,11 @@ export default players = [
 		name:'亮亮',
 		img:'/aa',
 		selected:false,
+	},
+	{
+		id:7,
+		name:'某人',
+		img:'/aa',
+		selected:false,
 	}
 ]

@@ -13,6 +13,7 @@ var styles = StyleSheet.create({
       paddingTop:30,
       paddingBottom:10,
       flexDirection:'row',  
+      justifyContent:'space-around',
       flex:1
     },
     playerselected:{
